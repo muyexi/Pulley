@@ -53,6 +53,11 @@ import UIKit
      *  Return the support drawer positions for your drawer.
      */
     @objc optional func supportedDrawerPositions() -> [PulleyPosition]
+    
+    
+    @objc optional func touchPassthroughScrollView(scrollView: UIScrollView, point: CGPoint)
+    
+    
 }
 
 /**
@@ -1156,6 +1161,10 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
             drawerShadowView.layer.shadowPath = borderPath
         }
     }
+    
+    public func setDrawerContentOff(y:CGFloat){
+        drawerScrollView.contentOffset = CGPoint(x: 0, y: y)
+    }
 
     // MARK: Configuration Updates
     
@@ -1637,6 +1646,8 @@ extension PulleyViewController: UIScrollViewDelegate {
         
         if scrollView == drawerScrollView
         {
+            (primaryContentViewController as? PulleyDrawerViewControllerDelegate)?.touchPassthroughScrollView?(scrollView: scrollView, point: CGPoint.zero)
+            
             let partialRevealHeight: CGFloat = (drawerContentViewController as? PulleyDrawerViewControllerDelegate)?.partialRevealDrawerHeight?(bottomSafeArea: pulleySafeAreaInsets.bottom) ?? kPulleyDefaultPartialRevealHeight
 
             let lowestStop = getStopList().min() ?? 0
